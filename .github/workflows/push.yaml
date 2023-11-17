@@ -1,0 +1,17 @@
+name: Build on push
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build gbdk project
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build
+        uses: wujood/gbdk-2020-github-builder@1.0.7
+        with:
+          subdirectory: ./src
+          output-name: gb-snake
+          source: main.c
