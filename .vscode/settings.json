@@ -1,19 +1,5 @@
 {
-  "files.associations": {
-    "stdint.h": "c",
-    "gb.h": "c",
-    "version.h": "c"
-  },
-  "actionButtons": {
-    "commands": [
-      {
-        "name": "Clean",
-        "command": "make clean",
-      },
-      {
-        "name": "Build",
-        "command": "make",
-      }
-    ]
-  }
+    "files.associations": {
+        "stdint.h": "c"
+    }
 }

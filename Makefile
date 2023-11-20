@@ -5,9 +5,10 @@
 
 # If you move this project you can change the directory 
 # to match your GBDK root directory (ex: GBDK_HOME = "C:/GBDK/"
-GBDK_HOME = ~/SDK/gbdk/
+GBDK_HOME = ${HOME}/SDK/gbdk/
 
 LCC = $(GBDK_HOME)bin/lcc 
+PNG2ASSET = $(GBDK_HOME)bin/png2asset 
 
 # You can set flags for LCC here
 # For example, you can uncomment the line below to turn on debug output
@@ -16,17 +17,19 @@ LCC = $(GBDK_HOME)bin/lcc
 
 
 # You can set the name of the .gb ROM file here
-PROJECTNAME    = Snake
+PROJECTNAME    = snake
 
+DSTDIR		= dist
+GENDIR 		= gen
 SRCDIR      = src
 OBJDIR      = obj
 RESDIR      = res
 BINS	    = $(OBJDIR)/$(PROJECTNAME).gb
-CSOURCES    = $(foreach dir,$(SRCDIR),$(notdir $(wildcard $(dir)/*.c))) $(foreach dir,$(RESDIR),$(notdir $(wildcard $(dir)/*.c)))
+CSOURCES    = $(foreach dir,$(SRCDIR),$(notdir $(wildcard $(dir)/*.c))) $(foreach dir,$(GENDIR),$(notdir $(wildcard $(dir)/*.c)))
 ASMSOURCES  = $(foreach dir,$(SRCDIR),$(notdir $(wildcard $(dir)/*.s)))
 OBJS       = $(CSOURCES:%.c=$(OBJDIR)/%.o) $(ASMSOURCES:%.s=$(OBJDIR)/%.o)
 
-all:	prepare $(BINS)
+all:	clean prepare png2asset $(BINS)
 
 compile.bat: Makefile
 	@echo "REM Automatically generated from Makefile" > compile.bat
@@ -34,10 +37,10 @@ compile.bat: Makefile
 
 # Compile .c files in "src/" to .o object files
 $(OBJDIR)/%.o:	$(SRCDIR)/%.c
-	$(LCC) $(LCCFLAGS) -c -o $@ $<
+	$(LCC) $(LCCFLAGS) -I${GENDIR} -c -o $@ $<
 
-# Compile .c files in "res/" to .o object files
-$(OBJDIR)/%.o:	$(RESDIR)/%.c
+# Compile .c files in "gen/" to .o object files
+$(OBJDIR)/%.o:	$(GENDIR)/%.c
 	$(LCC) $(LCCFLAGS) -c -o $@ $<
 
 # Compile .s assembly files in "src/" to .o object files
@@ -53,10 +56,16 @@ $(OBJDIR)/%.s:	$(SRCDIR)/%.c
 $(BINS):	$(OBJS)
 	$(LCC) $(LCCFLAGS) -o $(BINS) $(OBJS)
 
+png2asset:
+	${PNG2ASSET} ${RESDIR}/splash_screen.png -c ${GENDIR}/splash_screen.c -map -noflip
+
 prepare:
+	mkdir -p $(DSTDIR)
 	mkdir -p $(OBJDIR)
+	mkdir -p $(GENDIR)
 
 clean:
-#	rm -f  *.gb *.ihx *.cdb *.adb *.noi *.map
+	rm -f  $(DSTDIR)/*.*
 	rm -f  $(OBJDIR)/*.*
-
+	rm -f  $(GENDIR)/*.*
+	rm -f *.o *.lst *.map *.gb *.ihx *.sym *.cdb *.adb *.asm
