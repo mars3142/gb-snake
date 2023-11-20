@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "stdint.h": "c"
+        "stdint.h": "c",
+        "splash_screen.h": "c",
+        "gb.h": "c"
     }
 }

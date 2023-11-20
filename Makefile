@@ -14,6 +14,7 @@ PNG2ASSET = $(GBDK_HOME)bin/png2asset
 # For example, you can uncomment the line below to turn on debug output
 # LCCFLAGS += -debug # Uncomment to enable debug output
 # LCCFLAGS += -v     # Uncomment for lcc verbose output
+LCCFLAGS +=-Wa-l -Wl-m -Wl-j -Wf--debug
 
 
 # You can set the name of the .gb ROM file here
@@ -57,7 +58,8 @@ $(BINS):	$(OBJS)
 	$(LCC) $(LCCFLAGS) -o $(BINS) $(OBJS)
 
 png2asset:
-	${PNG2ASSET} ${RESDIR}/splash_screen.png -c ${GENDIR}/splash_screen.c -map -noflip
+	${PNG2ASSET} ${RESDIR}/splash_screen.png -c ${GENDIR}/splash_screen.c -map -source_tileset $(RESDIR)/splash_screen_tileset.png -noflip
+	${PNG2ASSET} ${RESDIR}/splash_screen_tileset.png -c ${GENDIR}/splash_screen_tileset.c -tiles_only -map -noflip
 
 prepare:
 	mkdir -p $(DSTDIR)
